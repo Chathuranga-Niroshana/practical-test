@@ -11,7 +11,7 @@ const initialState: ProductState = {
 }
 
 // get products thunk
-export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: string }>('products/fetchAll', async (credentials, thunkAPI) => {
+export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: string }>('products/fetchAll', async (_, thunkAPI) => {
     try {
         const response = await axiosInstance.get('/products');
         return response.data.products as Product[];
@@ -20,14 +20,32 @@ export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: st
         if (error.response && error.response.data?.message) {
             return thunkAPI.rejectWithValue(error.response.data.message);
         }
-        return thunkAPI.rejectWithValue('Login failed due to unknown error');
+        return thunkAPI.rejectWithValue('fetch failed due to unknown error');
     }
 });
+
+export const fetchProductById = createAsyncThunk<Product, number, { rejectValue: string }>('products/fetchById', async (id, thunkAPI) => {
+    try {
+        const response = await axiosInstance.get(`/products/${id}`);
+        return response.data;
+    } catch (err) {
+        const error = err as AxiosError<{ message: string }>;
+        if (error.response && error.response.data?.message) {
+            return thunkAPI.rejectWithValue(error.response.data.message);
+        }
+        return thunkAPI.rejectWithValue('fetch failed due to unknown error');
+    }
+});
+
 
 const productSlice = createSlice({
     name: 'product',
     initialState,
-    reducers: {},
+    reducers: {
+        clearSelectedProduct(state) {
+            state.selectedProduct = null;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchProducts.pending, (state) => {
@@ -43,7 +61,21 @@ const productSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload || 'Fetch products failed';
             })
+
+            .addCase(fetchProductById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchProductById.fulfilled, (state, action) => {
+                state.selectedProduct = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchProductById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Fetch products failed';
+            })
     },
 })
-
+export const { clearSelectedProduct } = productSlice.actions;
 export default productSlice.reducer;

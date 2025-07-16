@@ -1,5 +1,6 @@
 import type { Product } from '@/types/productTypes';
 import { FontAwesome } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
@@ -8,6 +9,12 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+
+    const router = useRouter()
+    const handlePress = () => {
+        router.push(`/product/${product.id}`);
+    };
+
     const renderStars = () => {
         const fullStars = Math.floor(product.rating);
         const halfStar = product.rating % 1 >= 0.5;
@@ -29,7 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     };
 
     return (
-        <TouchableOpacity className="bg-gray-100 p-3 rounded-xl shadow-md m-1 w-[47%]">
+        <TouchableOpacity onPress={handlePress} className="bg-gray-100 p-3 rounded-xl shadow-md m-1 w-[47%]">
             <View className='w-full bg-white h-32 flex items-center justify-center  overflow-hidden rounded-xl mb-2 p-3 '>
                 <Image
                     source={{ uri: product.thumbnail }}

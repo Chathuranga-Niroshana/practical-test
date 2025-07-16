@@ -30,6 +30,7 @@ function AppNavigator() {
           <Stack.Screen name="loginScreen" />
         )}
         <Stack.Screen name="+not-found" />
+        <Stack.Screen name="product/[id]" />
       </Stack>
     </>
   );
