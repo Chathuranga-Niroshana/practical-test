@@ -1,49 +1,108 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Platform, View } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          position: 'absolute',
+          bottom: Platform.OS === 'ios' ? 30 : 20,
+          backgroundColor: 'black',
+          borderRadius: 30,
+          width: 220,
+          height: 64,
+          left: '50%',
+          marginLeft: 90,
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          elevation: 5,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 6,
+          borderTopWidth: 0,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <View className="items-center justify-center">
+              <Ionicons
+                name="home"
+                size={24}
+                color={focused ? 'white' : 'gray'}
+              />
+              {focused && (
+                <View
+                  style={{
+                    width: 20,
+                    height: 2,
+                    backgroundColor: 'white',
+                    borderRadius: 1,
+                    marginTop: 4,
+                  }}
+                />
+              )}
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="searchScreen"
         options={{
-          title: 'Search',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <View className="items-center justify-center">
+              <Ionicons
+                name="search"
+                size={24}
+                color={focused ? 'white' : 'gray'}
+              />
+              {focused && (
+                <View
+                  style={{
+                    width: 20,
+                    height: 2,
+                    backgroundColor: 'white',
+                    borderRadius: 1,
+                    marginTop: 4,
+                  }}
+                />
+              )}
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="profileScreen"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <View className="items-center justify-center">
+              <Ionicons
+                name="person"
+                size={24}
+                color={focused ? 'white' : 'gray'}
+              />
+              {focused && (
+                <View
+                  style={{
+                    width: 20,
+                    height: 2,
+                    backgroundColor: 'white',
+                    borderRadius: 1,
+                    marginTop: 4,
+                  }}
+                />
+              )}
+            </View>
+          ),
         }}
       />
     </Tabs>
