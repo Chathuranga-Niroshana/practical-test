@@ -1,11 +1,14 @@
+import Header from '@/components/ui/Header'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { SafeAreaView, ScrollView } from 'react-native'
 
 const HomeScreen = () => {
   return (
-    <View>
-      <Text>HomeScreen</Text>
-    </View>
+    <SafeAreaView className='flex-1 bg-white'>
+      <ScrollView>
+        <Header />
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
