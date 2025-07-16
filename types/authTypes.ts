@@ -1,3 +1,5 @@
+import type { User } from "./userTypes";
+
 export interface LoginFormData {
     username: string;
     password: string;
@@ -19,4 +21,14 @@ export interface LoginResponse {
     lastName: string;
     gender: string;
     image: string;
+}
+
+
+export interface AuthState {
+    isLoggedIn: boolean;
+    user: User | null
+    accessToken: string | null;
+    refreshToken: string | null;
+    loading: boolean;
+    error: string | null;
 }

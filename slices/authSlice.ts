@@ -1,18 +1,9 @@
-import type { LoginFormData, LoginResponse } from '@/types/authTypes';
+import type { AuthState, LoginFormData, LoginResponse } from '@/types/authTypes';
 import type { User } from '@/types/userTypes';
 import axiosInstance from '@/utils/axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncThunk, createSlice, } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
-
-interface AuthState {
-    isLoggedIn: boolean;
-    user: User | null
-    accessToken: string | null;
-    refreshToken: string | null;
-    loading: boolean;
-    error: string | null;
-}
 
 const initialState: AuthState = {
     isLoggedIn: false,
@@ -22,8 +13,6 @@ const initialState: AuthState = {
     loading: false,
     error: null,
 }
-
-
 
 // login thunk
 export const login = createAsyncThunk<LoginResponse, LoginFormData, { rejectValue: string }>('auth/login', async (credentials, thunkAPI) => {
