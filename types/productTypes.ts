@@ -48,6 +48,7 @@ export interface Product {
 export interface ProductState {
     products: Product[];
     selectedProduct: Product | null;
+    searchedProducts: Product[];
     loading: boolean;
     error: string | null;
 }

@@ -11,19 +11,19 @@ import {
     REHYDRATE,
 } from 'redux-persist'
 import authReducer from '../slices/authSlice'
+import cartReducer from '../slices/cartSlice'
 import productReducer from '../slices/productSlice'
 
 const rootReducer = combineReducers({
     auth: authReducer,
     product: productReducer,
+    cart: cartReducer,
 })
 
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: [
-        'auth',
-    ],
+    whitelist: ['auth', 'cart'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

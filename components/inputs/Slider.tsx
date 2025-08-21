@@ -5,9 +5,10 @@ import { Text, View } from 'react-native';
 interface QuantitySliderProps {
     quantity: number;
     setQuantity: (value: number) => void;
+    maximumValue: number;
 }
 
-const QuantitySlider: React.FC<QuantitySliderProps> = ({ quantity, setQuantity }) => {
+const QuantitySlider: React.FC<QuantitySliderProps> = ({ quantity, setQuantity, maximumValue = 10 }) => {
 
     return (
         <View className=" -mt-8 flex justify-items-end items-end">
@@ -20,7 +21,7 @@ const QuantitySlider: React.FC<QuantitySliderProps> = ({ quantity, setQuantity }
             <Slider
                 style={{ width: '100%', height: 40 }}
                 minimumValue={1}
-                maximumValue={10}
+                maximumValue={maximumValue}
                 step={1}
                 value={quantity}
                 onValueChange={(val: number) => setQuantity(val)}

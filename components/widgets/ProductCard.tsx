@@ -12,7 +12,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     const router = useRouter()
     const handlePress = () => {
-        router.push(`/product/${product.id}`);
+        router.push(`/product/${Number(product.id)}`);
     };
 
     const renderStars = () => {

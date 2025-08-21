@@ -1,5 +1,6 @@
 import QuantitySlider from '@/components/inputs/Slider'
 import DetailsHeader from '@/components/ui/DetailsHeader'
+import { addToCart } from '@/slices/cartSlice'
 import { fetchProductById } from '@/slices/productSlice'
 import { AppDispatch, type RootState } from '@/store'
 import { FontAwesome } from '@expo/vector-icons'
@@ -11,17 +12,21 @@ import { useDispatch, useSelector } from 'react-redux'
 const ProductDetails = () => {
     const { id } = useLocalSearchParams()
     const { selectedProduct, loading, error } = useSelector((state: RootState) => state.product)
-    const dispatch = useDispatch<AppDispatch>()
+    const [quantity, setQuantity] = useState<number>(1)
 
+    const dispatch = useDispatch<AppDispatch>()
     useEffect(() => {
         dispatch(fetchProductById(Number(id)))
     }, [id, dispatch])
 
-    const [quantity, setQuantity] = useState<number>(1)
-
     const calculateTotalPrice = () => {
         return (selectedProduct?.price ?? 0) * quantity;
     };
+
+    const addToCartHandle = () => {
+        if (!selectedProduct) return
+        dispatch(addToCart({ ...selectedProduct, quantity }))
+    }
 
     if (loading) {
         return (
@@ -57,7 +62,7 @@ const ProductDetails = () => {
                         <View className=' overflow-hidden w-1/2'>
                             <Text className='text-2xl font-bold'>{selectedProduct?.title} </Text>
                             <View className=' bg-orange-100 px-3 mt-2 py-1 w-2/3 text-center rounded-full flex items-center justify-center'>
-                                <Text className='font-semibold text-orange-400'>{selectedProduct?.brand}</Text>
+                                <Text className='font-semibold text-orange-400'>{selectedProduct?.category}</Text>
                             </View>
                         </View>
                         <View className='flex flex-row items-center gap-2 bg-orange-100 px-2 py-1 rounded-full'>
@@ -76,7 +81,7 @@ const ProductDetails = () => {
                     <View>
                         <Text className='mt-4 text-2xl font-bold leading-loose'>Quantity</Text>
                         <View>
-                            <QuantitySlider quantity={quantity} setQuantity={setQuantity} />
+                            <QuantitySlider quantity={quantity} setQuantity={setQuantity} maximumValue={Number(selectedProduct?.stock)} />
                         </View>
                     </View>
 
@@ -85,7 +90,7 @@ const ProductDetails = () => {
                             <Text className='mt-4 text-lg font-semibold leading-loose'>Total Price</Text>
                             <Text className='text-4xl font-bold text-black'>${calculateTotalPrice()?.toFixed(2)}</Text>
                         </View>
-                        <TouchableOpacity className='bg-black px-10 py-6 rounded-full flex items-center justify-center'>
+                        <TouchableOpacity onPress={addToCartHandle} className='bg-black px-10 py-6 rounded-full flex items-center justify-center'>
                             <Text className='text-white text-lg font-semibold'>Add to Cart</Text>
                         </TouchableOpacity>
                     </View>

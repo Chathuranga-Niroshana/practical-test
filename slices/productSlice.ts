@@ -6,6 +6,7 @@ import type { AxiosError } from 'axios';
 const initialState: ProductState = {
     products: [],
     selectedProduct: null,
+    searchedProducts: [],
     loading: false,
     error: null,
 }
@@ -24,10 +25,24 @@ export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: st
     }
 });
 
-export const fetchProductById = createAsyncThunk<Product, number, { rejectValue: string }>('products/fetchById', async (id, thunkAPI) => {
+export const fetchProductById = createAsyncThunk<Product, number, { rejectValue: string }>('products/fetchById', async (id: number, thunkAPI) => {
     try {
         const response = await axiosInstance.get(`/products/${id}`);
         return response.data;
+    } catch (err) {
+        const error = err as AxiosError<{ message: string }>;
+        if (error.response && error.response.data?.message) {
+            return thunkAPI.rejectWithValue(error.response.data.message);
+        }
+        return thunkAPI.rejectWithValue('fetch failed due to unknown error');
+    }
+});
+
+
+export const fetchSearchProduct = createAsyncThunk<Product[], string, { rejectValue: string }>('products/searchProducts', async (query, thunkAPI) => {
+    try {
+        const response = await axiosInstance.get(`/products/search?q=${query}`);
+        return response.data.products as Product[];
     } catch (err) {
         const error = err as AxiosError<{ message: string }>;
         if (error.response && error.response.data?.message) {
@@ -72,6 +87,20 @@ const productSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchProductById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Fetch products failed';
+            })
+
+            .addCase(fetchSearchProduct.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchSearchProduct.fulfilled, (state, action) => {
+                state.searchedProducts = action.payload;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchSearchProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Fetch products failed';
             })
